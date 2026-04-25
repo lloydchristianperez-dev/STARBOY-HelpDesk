@@ -14,3 +14,5 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+# Don't ignore frontend build env
+!frontend/.env

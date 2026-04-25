@@ -6,8 +6,22 @@ const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
 
-app.use(cors());
+// CORS - allow frontend domains
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://starboy-helpdesk.vercel.app',
+    /\.vercel\.app$/  // allows any vercel preview URL
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
+
+// Root route (for testing)
+app.get('/', (req, res) => {
+  res.json({ message: 'STARBOY HelpDesk API is running! 🚀' });
+});
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ MongoDB Connected'))

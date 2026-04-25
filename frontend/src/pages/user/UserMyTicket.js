@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Paper, Typography, Button, TextField, MenuItem, Grid, Card,
   Chip, Alert, Snackbar, IconButton, Avatar, Divider, InputAdornment,
-  LinearProgress
+  LinearProgress, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import {
   Add, Send, AttachFile, Description, PriorityHigh, Category,
@@ -17,6 +17,30 @@ const UserMyTicket = () => {
   const [myTickets, setMyTickets] = useState([]);
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
   const [loading, setLoading] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, ticket: null });
+
+const handleDeleteClick = (ticket) => {
+  setDeleteDialog({ open: true, ticket });
+};
+
+const handleDeleteConfirm = async () => {
+  try {
+    await API.delete(`/tickets/${deleteDialog.ticket._id}`);
+    fetchMyTickets();
+    setNotification({
+      open: true,
+      message: '✅ Ticket deleted successfully!',
+      severity: 'success'
+    });
+  } catch (err) {
+    setNotification({
+      open: true,
+      message: err.response?.data?.msg || 'Error deleting ticket',
+      severity: 'error'
+    });
+  }
+  setDeleteDialog({ open: false, ticket: null });
+};
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -422,15 +446,30 @@ const UserMyTicket = () => {
                       </Box>
                     </Box>
                   </Box>
-                  <Chip 
-                    label={statusInfo.label}
-                    sx={{ 
-                      bgcolor: statusInfo.bg, 
-                      color: statusInfo.color, 
-                      fontWeight: 700,
-                      minWidth: 100
-                    }}
-                  />
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+  <Chip 
+    label={statusInfo.label}
+    sx={{ 
+      bgcolor: statusInfo.bg, 
+      color: statusInfo.color, 
+      fontWeight: 700,
+      minWidth: 100
+    }}
+  />
+  {ticket.status === 'closed' && (
+    <IconButton
+      size="small"
+      onClick={() => handleDeleteClick(ticket)}
+      sx={{
+        color: '#EF4444',
+        '&:hover': { bgcolor: '#FEE2E2' }
+      }}
+      title="Delete this resolved ticket"
+    >
+      <Delete fontSize="small" />
+    </IconButton>
+  )}
+</Box>
                 </Box>
               </Card>
             );
@@ -457,6 +496,41 @@ const UserMyTicket = () => {
           {notification.message}
         </Alert>
       </Snackbar>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={() => setDeleteDialog({ open: false, ticket: null })}
+      >
+        <DialogTitle sx={{ fontWeight: 700 }}>
+          🗑️ Delete Ticket?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete ticket <strong>"{deleteDialog.ticket?.title}"</strong>?
+            <br /><br />
+            This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button 
+            onClick={() => setDeleteDialog({ open: false, ticket: null })}
+            sx={{ textTransform: 'none', color: '#6B7280' }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleDeleteConfirm}
+            variant="contained"
+            sx={{ 
+              bgcolor: '#EF4444', 
+              textTransform: 'none',
+              '&:hover': { bgcolor: '#DC2626' }
+            }}
+          >
+            Delete Ticket
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Layout>
   );
 };

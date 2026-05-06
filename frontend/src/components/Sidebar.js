@@ -59,16 +59,29 @@ const Sidebar = ({ onNewTicket }) => {
       }}
     >
       {/* Logo */}
-      <Box sx={{ p: 2.5, borderBottom: '1px solid #F3F4F6', textAlign: 'center' }}>
-        <img 
-          src="/logo.png" 
-          alt="STARBOY" 
-          style={{ width: '100%', maxWidth: '140px', height: 'auto' }}
-          onError={(e) => { 
-            e.target.style.display = 'none';
-            e.target.parentNode.innerHTML = '<div style="font-weight:700;font-size:18px;background:linear-gradient(135deg,#4F46E5,#A855F7,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">STARBOY</div>';
-          }}
-        />
+      <Box sx={{ p: 2.5, borderBottom: '1px solid #F3F4F6', textAlign: 'left' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+          <img
+            src="/starboy-logo.png"
+            alt="STARBOY Logo"
+            style={{ width: 34, height: 34, objectFit: 'contain' }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+          <Typography
+            sx={{
+              fontWeight: 700,
+              fontSize: '1.05rem',
+              letterSpacing: '0.4px',
+              background: 'linear-gradient(135deg,#4F46E5,#A855F7,#EC4899)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            STARBOY
+          </Typography>
+        </Box>
       </Box>
 
       {/* Menu Items */}

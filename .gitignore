@@ -16,3 +16,7 @@ Thumbs.db
 .idea/
 # Don't ignore frontend build env
 !frontend/.env
+# Upload files
+uploads/
+**/uploads/
+!backend/uploads/.gitkeep

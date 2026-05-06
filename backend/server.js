@@ -18,6 +18,9 @@ app.use(cors({
 
 app.use(express.json());
 
+// Serve uploads directory
+app.use('/uploads', express.static('uploads'));
+
 // Root route (for testing)
 app.get('/', (req, res) => {
   res.json({ message: 'STARBOY HelpDesk API is running! 🚀' });

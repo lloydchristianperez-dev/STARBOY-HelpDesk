@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import {
   Add, Send, AttachFile, Description, PriorityHigh, Category,
-  CheckCircle, Warning, Info, Close, AccessTime, Delete
+  CheckCircle, Warning, Info, Close, AccessTime, Delete, Download
 } from '@mui/icons-material';
 import Layout from '../../components/Layout';
 import API from '../../services/api';
@@ -18,6 +18,8 @@ const UserMyTicket = () => {
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
   const [loading, setLoading] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ticket: null });
+  const [dragActive, setDragActive] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
 
 const handleDeleteClick = (ticket) => {
   setDeleteDialog({ open: true, ticket });
@@ -40,6 +42,92 @@ const handleDeleteConfirm = async () => {
     });
   }
   setDeleteDialog({ open: false, ticket: null });
+};
+
+// File handling functions
+const handleDrag = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.type === 'dragenter' || e.type === 'dragover') {
+    setDragActive(true);
+  } else if (e.type === 'dragleave') {
+    setDragActive(false);
+  }
+};
+
+const validateFile = (file) => {
+  const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+  const maxSize = 10 * 1024 * 1024; // 10MB
+
+  if (!allowedTypes.includes(file.type)) {
+    setNotification({
+      open: true,
+      message: '❌ Invalid file type. Only PDF and images (PNG, JPG, GIF, WebP) are allowed.',
+      severity: 'error'
+    });
+    return false;
+  }
+
+  if (file.size > maxSize) {
+    setNotification({
+      open: true,
+      message: '❌ File size exceeds 10MB limit.',
+      severity: 'error'
+    });
+    return false;
+  }
+
+  return true;
+};
+
+const handleFiles = (files) => {
+  const newFiles = Array.from(files);
+  const validFiles = newFiles.filter(validateFile);
+  
+  const updatedFiles = [...attachedFiles, ...validFiles];
+  if (updatedFiles.length > 5) {
+    setNotification({
+      open: true,
+      message: '❌ Maximum 5 files allowed per ticket.',
+      severity: 'error'
+    });
+    return;
+  }
+
+  setAttachedFiles(updatedFiles);
+  if (validFiles.length > 0) {
+    setNotification({
+      open: true,
+      message: `✅ ${validFiles.length} file(s) added successfully!`,
+      severity: 'success'
+    });
+  }
+};
+
+const handleDrop = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  setDragActive(false);
+  
+  const files = e.dataTransfer.files;
+  handleFiles(files);
+};
+
+const handleFileInput = (e) => {
+  const files = e.target.files;
+  handleFiles(files);
+};
+
+const removeFile = (index) => {
+  setAttachedFiles(attachedFiles.filter((_, i) => i !== index));
+};
+
+const formatFileSize = (bytes) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 };
   const [formData, setFormData] = useState({
     title: '',
@@ -76,8 +164,23 @@ const handleDeleteConfirm = async () => {
 
     setLoading(true);
     try {
-      await API.post('/tickets', formData);
+      const formDataObj = new FormData();
+      formDataObj.append('title', formData.title);
+      formDataObj.append('description', formData.description);
+      formDataObj.append('category', formData.category);
+      formDataObj.append('priority', formData.priority);
+
+      // Add attached files
+      attachedFiles.forEach((file) => {
+        formDataObj.append('attachments', file);
+      });
+
+      await API.post('/tickets', formDataObj, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
       setFormData({ title: '', description: '', category: 'General', priority: 'medium' });
+      setAttachedFiles([]);
       fetchMyTickets();
       setNotification({
         open: true,
@@ -243,32 +346,114 @@ const handleDeleteConfirm = async () => {
                 }}
               />
 
-              {/* Attachments (UI only) */}
-              <Box sx={{ 
-                p: 2.5, 
-                border: '2px dashed #E5E7EB', 
-                borderRadius: 2, 
-                textAlign: 'center',
-                mb: 3,
-                bgcolor: '#F9FAFB',
-                cursor: 'pointer',
-                '&:hover': { bgcolor: '#F3F4F6', borderColor: '#D1D5DB' }
-              }}>
-                <AttachFile sx={{ fontSize: 32, color: '#9CA3AF', mb: 1 }} />
-                <Typography variant="body2" sx={{ color: '#6B7280', fontWeight: 500 }}>
-                  Drag files here or click to attach
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
-                  PNG, JPG, PDF up to 10MB (Coming Soon)
-                </Typography>
+              {/* Attachments */}
+              <Box 
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                sx={{ 
+                  p: 2.5, 
+                  border: dragActive ? '2px solid #2563EB' : '2px dashed #E5E7EB', 
+                  borderRadius: 2, 
+                  textAlign: 'center',
+                  mb: 3,
+                  bgcolor: dragActive ? '#EFF6FF' : '#F9FAFB',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  '&:hover': { bgcolor: '#F3F4F6', borderColor: '#D1D5DB' }
+                }}
+              >
+                <input
+                  type="file"
+                  id="file-input"
+                  multiple
+                  accept=".pdf,.png,.jpg,.jpeg,.gif,.webp"
+                  onChange={handleFileInput}
+                  style={{ display: 'none' }}
+                />
+                <label 
+                  htmlFor="file-input" 
+                  style={{ cursor: 'pointer', display: 'block' }}
+                >
+                  <AttachFile sx={{ fontSize: 32, color: '#9CA3AF', mb: 1 }} />
+                  <Typography variant="body2" sx={{ color: '#6B7280', fontWeight: 500 }}>
+                    Drag files here or click to attach
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                    PDF, PNG, JPG, GIF, WebP up to 10MB (Max 5 files)
+                  </Typography>
+                </label>
               </Box>
+
+              {/* Attached Files Display */}
+              {attachedFiles.length > 0 && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, color: '#111827', mb: 1.5 }}>
+                    📎 Attached Files ({attachedFiles.length}/5)
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    {attachedFiles.map((file, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          p: 1.5,
+                          bgcolor: '#F3F4F6',
+                          borderRadius: 1.5,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          border: '1px solid #E5E7EB'
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0 }}>
+                          <Box sx={{
+                            p: 0.75,
+                            bgcolor: file.type.includes('pdf') ? '#FEE2E2' : '#DBEAFE',
+                            borderRadius: 1,
+                            display: 'flex'
+                          }}>
+                            {file.type.includes('pdf') ? (
+                              <Description sx={{ fontSize: 20, color: '#DC2626' }} />
+                            ) : (
+                              <Description sx={{ fontSize: 20, color: '#2563EB' }} />
+                            )}
+                          </Box>
+                          <Box sx={{ minWidth: 0, flexGrow: 1 }}>
+                            <Typography 
+                              variant="body2" 
+                              sx={{ fontWeight: 500, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                              title={file.name}
+                            >
+                              {file.name}
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#6B7280' }}>
+                              {formatFileSize(file.size)}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <IconButton
+                          size="small"
+                          onClick={() => removeFile(index)}
+                          sx={{ color: '#EF4444', '&:hover': { bgcolor: '#FEE2E2' } }}
+                        >
+                          <Close fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              )}
 
               {/* Submit Buttons */}
               <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                 <Button
                   type="button"
                   variant="outlined"
-                  onClick={() => setFormData({ title: '', description: '', category: 'General', priority: 'medium' })}
+                  onClick={() => {
+                    setFormData({ title: '', description: '', category: 'General', priority: 'medium' });
+                    setAttachedFiles([]);
+                  }}
                   sx={{ 
                     textTransform: 'none', 
                     borderColor: '#E5E7EB', 
@@ -426,6 +611,26 @@ const handleDeleteConfirm = async () => {
                     <Typography variant="body2" sx={{ color: '#6B7280', mb: 1.5 }}>
                       {ticket.description?.substring(0, 120)}...
                     </Typography>
+                    {/* Display attachments */}
+                    {ticket.attachments && ticket.attachments.length > 0 && (
+                      <Box sx={{ mb: 1.5, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {ticket.attachments.map((file, idx) => (
+                          <Chip
+                            key={idx}
+                            icon={<Description />}
+                            label={file.originalName}
+                            size="small"
+                            variant="outlined"
+                            onClick={() => window.open(`http://localhost:5000/uploads/${file.filename}`, '_blank')}
+                            sx={{ 
+                              fontSize: '0.7rem',
+                              cursor: 'pointer',
+                              '&:hover': { bgcolor: '#E5E7EB' }
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    )}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                       <Chip 
                         label={priorityInfo.label} 

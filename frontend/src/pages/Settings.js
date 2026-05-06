@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import {
   Notifications, DarkMode, Language, Security, Lock, Visibility,
-  VisibilityOff, Email, VolumeUp, Delete, Help, Info, 
+  VisibilityOff, Email, Delete, Help, Info, 
   ChevronRight, Warning, Shield, Palette, AccountCircle,
   Logout, Check
 } from '@mui/icons-material';

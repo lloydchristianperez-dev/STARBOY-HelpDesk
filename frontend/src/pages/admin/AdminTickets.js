@@ -522,7 +522,61 @@ const AdminTickets = () => {
                 </Paper>
               </Box>
 
-              <Box>
+              {/* Display Attachments */}
+              {selectedTicket.attachments && selectedTicket.attachments.length > 0 && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>📎 Attachments ({selectedTicket.attachments.length})</Typography>
+                  <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    {selectedTicket.attachments.map((file, idx) => (
+                      <Box
+                        key={idx}
+                        sx={{
+                          p: 1.5,
+                          bgcolor: '#F9FAFB',
+                          borderRadius: 1.5,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          border: '1px solid #E5E7EB'
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0, flexGrow: 1 }}>
+                          <Box sx={{
+                            p: 0.75,
+                            bgcolor: file.mimetype.includes('pdf') ? '#FEE2E2' : '#DBEAFE',
+                            borderRadius: 1,
+                            display: 'flex'
+                          }}>
+                            <Download sx={{ fontSize: 18, color: file.mimetype.includes('pdf') ? '#DC2626' : '#2563EB' }} />
+                          </Box>
+                          <Box sx={{ minWidth: 0, flexGrow: 1 }}>
+                            <Typography 
+                              variant="body2" 
+                              sx={{ fontWeight: 500, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                              title={file.originalName}
+                            >
+                              {file.originalName}
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#6B7280' }}>
+                              {(file.size / 1024).toFixed(2)} KB
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          onClick={() => window.open(`http://localhost:5000/uploads/${file.filename}`, '_blank')}
+                          sx={{ textTransform: 'none', ml: 1 }}
+                        >
+                          Download
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              )}
+
+              
                 <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase' }}>Timeline</Typography>
                 <Box sx={{ mt: 1, display: 'flex', gap: 2 }}>
                   <Typography variant="body2">

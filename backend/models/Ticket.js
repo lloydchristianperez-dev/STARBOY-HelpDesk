@@ -9,7 +9,14 @@ const ticketSchema = new mongoose.Schema({
   status: { type: String, enum: ['open', 'in-progress', 'closed', 'pending'], default: 'open' },
   submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  replies: { type: Number, default: 0 }
+  replies: { type: Number, default: 0 },
+  attachments: [{
+    originalName: String,
+    filename: String,
+    mimetype: String,
+    size: Number,
+    uploadedAt: { type: Date, default: Date.now }
+  }]
 }, { timestamps: true });
 
 // Auto-generate ticket ID before saving

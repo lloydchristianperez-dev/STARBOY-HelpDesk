@@ -20,6 +20,7 @@ const UserMyTicket = () => {
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ticket: null });
   const [dragActive, setDragActive] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
+  const fileInputRef = React.useRef(null);
 
 const handleDeleteClick = (ticket) => {
   setDeleteDialog({ open: true, ticket });
@@ -175,9 +176,7 @@ const formatFileSize = (bytes) => {
         formDataObj.append('attachments', file);
       });
 
-      await API.post('/tickets', formDataObj, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await API.post('/tickets', formDataObj);
       
       setFormData({ title: '', description: '', category: 'General', priority: 'medium' });
       setAttachedFiles([]);
@@ -352,6 +351,7 @@ const formatFileSize = (bytes) => {
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
                 sx={{ 
                   p: 2.5, 
                   border: dragActive ? '2px solid #2563EB' : '2px dashed #E5E7EB', 
@@ -365,25 +365,20 @@ const formatFileSize = (bytes) => {
                 }}
               >
                 <input
+                  ref={fileInputRef}
                   type="file"
-                  id="file-input"
                   multiple
                   accept=".pdf,.png,.jpg,.jpeg,.gif,.webp"
                   onChange={handleFileInput}
                   style={{ display: 'none' }}
                 />
-                <label 
-                  htmlFor="file-input" 
-                  style={{ cursor: 'pointer', display: 'block' }}
-                >
-                  <AttachFile sx={{ fontSize: 32, color: '#9CA3AF', mb: 1 }} />
-                  <Typography variant="body2" sx={{ color: '#6B7280', fontWeight: 500 }}>
-                    Drag files here or click to attach
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
-                    PDF, PNG, JPG, GIF, WebP up to 10MB (Max 5 files)
-                  </Typography>
-                </label>
+                <AttachFile sx={{ fontSize: 32, color: '#9CA3AF', mb: 1 }} />
+                <Typography variant="body2" sx={{ color: '#6B7280', fontWeight: 500 }}>
+                  Drag files here or click to attach
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  PDF, PNG, JPG, GIF, WebP up to 10MB (Max 5 files)
+                </Typography>
               </Box>
 
               {/* Attached Files Display */}

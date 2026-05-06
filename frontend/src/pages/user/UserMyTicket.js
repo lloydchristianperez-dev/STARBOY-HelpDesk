@@ -347,12 +347,11 @@ const formatFileSize = (bytes) => {
 
               {/* Attachments */}
               <Box 
-                component="label"
-                htmlFor="file-input"
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
                 sx={{ 
                   p: 2.5, 
                   border: dragActive ? '2px solid #2563EB' : '2px dashed #E5E7EB', 

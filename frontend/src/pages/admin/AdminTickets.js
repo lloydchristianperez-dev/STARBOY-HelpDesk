@@ -367,7 +367,14 @@ const AdminTickets = () => {
                           <Avatar sx={{ width: 28, height: 28, bgcolor: '#FED7AA', color: '#9A3412', fontSize: '0.8rem' }}>
                             {ticket.submittedBy?.name?.charAt(0) || 'U'}
                           </Avatar>
-                          <Typography variant="body2">{ticket.submittedBy?.name || 'Unknown'}</Typography>
+                          <Box>
+                            <Typography variant="body2">{ticket.submittedBy?.name || 'Unknown'}</Typography>
+                            {ticket.attachments?.length > 0 && (
+                              <Typography variant="caption" sx={{ color: '#6B7280', display: 'block' }}>
+                                {ticket.attachments.length} attachment{ticket.attachments.length > 1 ? 's' : ''}
+                              </Typography>
+                            )}
+                          </Box>
                         </Box>
                       </TableCell>
                       <TableCell>

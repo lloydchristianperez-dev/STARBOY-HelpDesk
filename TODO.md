@@ -1,0 +1,4 @@
+- [ ] Add provided logo image asset to frontend/public as /starboy-logo.png
+- [x] Update frontend/src/components/Sidebar.js logo section to place logo at top-left, left of STARBOY text across pages using Layout
+- [x] Verify fallback behavior remains intact if image fails to load
+- [ ] Run frontend build to validate no compile errors

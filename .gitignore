@@ -1,0 +1,22 @@
+node_modules/
+**/node_modules/
+.env
+**/.env
+.env.local
+.env.production
+build/
+dist/
+**/build/
+**/dist/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+# Don't ignore frontend build env
+!frontend/.env
+# Upload files
+uploads/
+**/uploads/
+!backend/uploads/.gitkeep

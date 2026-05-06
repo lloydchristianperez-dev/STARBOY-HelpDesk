@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box, Paper, Typography, Button, TextField, MenuItem, Grid, Card,
   Chip, Alert, Snackbar, IconButton, Avatar, Divider, InputAdornment,
@@ -20,7 +20,7 @@ const UserMyTicket = () => {
   const [deleteDialog, setDeleteDialog] = useState({ open: false, ticket: null });
   const [dragActive, setDragActive] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
-  const fileInputRef = React.useRef(null);
+  const fileInputRef = useRef(null);
 
 const handleDeleteClick = (ticket) => {
   setDeleteDialog({ open: true, ticket });
@@ -347,11 +347,12 @@ const formatFileSize = (bytes) => {
 
               {/* Attachments */}
               <Box 
+                component="label"
+                htmlFor="file-input"
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
                 sx={{ 
                   p: 2.5, 
                   border: dragActive ? '2px solid #2563EB' : '2px dashed #E5E7EB', 
@@ -367,6 +368,8 @@ const formatFileSize = (bytes) => {
                 <input
                   ref={fileInputRef}
                   type="file"
+                  id="file-input"
+                  name="attachments"
                   multiple
                   accept=".pdf,.png,.jpg,.jpeg,.gif,.webp"
                   onChange={handleFileInput}

@@ -6,10 +6,9 @@ import {
   Chip, Dialog, DialogTitle, DialogContent, DialogActions, InputAdornment
 } from '@mui/material';
 import {
-  Notifications, DarkMode, Language, Security, Lock, Visibility,
-  VisibilityOff, Email, Delete, Help, Info, 
-  ChevronRight, Warning, Shield, Palette, AccountCircle,
-  Logout, Check
+  AccountCircle, Notifications, Security, Palette, Language, Help,
+  Email, Check, Info, VolumeUp, DarkMode, ChevronRight, Lock,
+  Shield, Warning, Logout, Delete, Visibility, VisibilityOff
 } from '@mui/icons-material';
 import Layout from '../components/Layout';
 import API from '../services/api';

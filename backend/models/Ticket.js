@@ -9,21 +9,16 @@ const ticketSchema = new mongoose.Schema({
   status: { type: String, enum: ['open', 'in-progress', 'closed', 'pending'], default: 'open' },
   submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  replies: { type: Number, default: 0 },
-  attachments: [{
-    originalName: String,
-    filename: String,
-    mimetype: String,
-    size: Number,
-    uploadedAt: { type: Date, default: Date.now }
-  }]
+  replies: { type: Number, default: 0 }
 }, { timestamps: true });
 
-// Auto-generate ticket ID before saving
+// Auto-generate ticket ID before saving - using timestamp for uniqueness
 ticketSchema.pre('save', async function(next) {
   if (!this.ticketId) {
-    const count = await mongoose.model('Ticket').countDocuments();
-    this.ticketId = `TK-${String(count + 8900).padStart(4, '0')}`;
+    // Use timestamp + random for guaranteed uniqueness even in concurrent environments
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+    this.ticketId = `TK-${timestamp.slice(-4)}${random}`;
   }
   next();
 });

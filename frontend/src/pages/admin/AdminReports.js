@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import {
   TrendingUp, TrendingDown, AccessTime, CheckCircle, 
-  StarBorder, Download, PictureAsPdf, Insights, Close
+  StarBorder, Download, Insights, Close
 } from '@mui/icons-material';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -190,19 +190,6 @@ const AdminReports = () => {
             <MenuItem value="90days">Last 90 Days</MenuItem>
             <MenuItem value="year">This Year</MenuItem>
           </Select>
-          <Button
-            variant="contained"
-            startIcon={<PictureAsPdf />}
-            onClick={exportPDF}
-            sx={{ 
-              bgcolor: '#2563EB', 
-              textTransform: 'none',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: '#1D4ED8', boxShadow: 'none' }
-            }}
-          >
-            Export PDF
-          </Button>
         </Box>
       </Box>
 

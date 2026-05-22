@@ -143,26 +143,6 @@ const Sidebar = ({ onNewTicket }) => {
         </Box>
       )}
 
-      {/* Admin New Ticket Button */}
-      {user?.role === 'admin' && (
-        <Box sx={{ px: 2.5, pb: 2 }}>
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{
-              bgcolor: '#2563EB',
-              py: 1.2,
-              fontWeight: 600,
-              textTransform: 'none',
-              fontSize: '0.9rem',
-              boxShadow: 'none',
-              '&:hover': { bgcolor: '#1D4ED8' }
-            }}
-          >
-            New Ticket
-          </Button>
-        </Box>
-      )}
 
       {/* Logout */}
       <Box 

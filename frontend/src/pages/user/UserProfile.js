@@ -4,7 +4,7 @@ import {
   Chip, Divider, IconButton, Alert, Snackbar, InputAdornment
 } from '@mui/material';
 import {
-  Edit, Save, Cancel, Email, Person, Lock, CalendarToday,
+  Edit, Save, Cancel, Email, Person, CalendarToday,
   ConfirmationNumber, CheckCircle, Cake, Badge as BadgeIcon,
   CameraAlt, Phone, LocationOn
 } from '@mui/icons-material';
@@ -13,7 +13,7 @@ import API from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 const UserProfile = () => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [tickets, setTickets] = useState([]);
   const [formData, setFormData] = useState({
@@ -71,7 +71,6 @@ const UserProfile = () => {
 
   return (
     <Layout>
-      {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, color: '#111827' }}>
           My Profile
@@ -82,15 +81,13 @@ const UserProfile = () => {
       </Box>
 
       <Grid container spacing={3}>
-        {/* Left - Profile Card */}
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 3, borderRadius: 2, border: '1px solid #E5E7EB', boxShadow: 'none', textAlign: 'center' }}>
-            {/* Avatar with Camera */}
             <Box sx={{ position: 'relative', display: 'inline-block', mb: 2 }}>
-              <Avatar 
-                sx={{ 
-                  width: 120, 
-                  height: 120, 
+              <Avatar
+                sx={{
+                  width: 120,
+                  height: 120,
                   bgcolor: '#FED7AA',
                   color: '#9A3412',
                   fontSize: '3rem',
@@ -101,10 +98,10 @@ const UserProfile = () => {
               >
                 {user?.name?.charAt(0).toUpperCase()}
               </Avatar>
-              <IconButton 
-                sx={{ 
-                  position: 'absolute', 
-                  bottom: 0, 
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
                   right: 0,
                   bgcolor: '#2563EB',
                   color: 'white',
@@ -124,19 +121,18 @@ const UserProfile = () => {
               {user?.email}
             </Typography>
 
-            <Chip 
+            <Chip
               label="👤 Customer Account"
-              sx={{ 
-                mt: 2, 
-                bgcolor: '#DBEAFE', 
-                color: '#2563EB', 
+              sx={{
+                mt: 2,
+                bgcolor: '#DBEAFE',
+                color: '#2563EB',
                 fontWeight: 600
               }}
             />
 
             <Divider sx={{ my: 3 }} />
 
-            {/* Account Stats */}
             <Box sx={{ textAlign: 'left' }}>
               <Typography variant="caption" sx={{ color: '#6B7280', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>
                 Account Info
@@ -177,16 +173,14 @@ const UserProfile = () => {
           </Paper>
         </Grid>
 
-        {/* Right - Edit Form & Stats */}
         <Grid item xs={12} md={8}>
-          {/* Profile Info Form */}
           <Paper sx={{ p: 3, borderRadius: 2, border: '1px solid #E5E7EB', boxShadow: 'none', mb: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827' }}>
                 Personal Information
               </Typography>
               {!editMode ? (
-                <Button 
+                <Button
                   variant="outlined"
                   startIcon={<Edit />}
                   onClick={() => setEditMode(true)}
@@ -196,18 +190,18 @@ const UserProfile = () => {
                 </Button>
               ) : (
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Button 
+                  <Button
                     startIcon={<Cancel />}
                     onClick={handleCancel}
                     sx={{ textTransform: 'none' }}
                   >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     variant="contained"
                     startIcon={<Save />}
                     onClick={handleSave}
-                    sx={{ 
+                    sx={{
                       bgcolor: '#2563EB',
                       textTransform: 'none',
                       boxShadow: 'none',
@@ -283,7 +277,6 @@ const UserProfile = () => {
             </Grid>
           </Paper>
 
-          {/* Ticket Statistics */}
           <Paper sx={{ p: 3, borderRadius: 2, border: '1px solid #E5E7EB', boxShadow: 'none', mb: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827', mb: 3 }}>
               📊 Your Activity
@@ -318,39 +311,6 @@ const UserProfile = () => {
                 </Card>
               </Grid>
             </Grid>
-          </Paper>
-
-          {/* Security Section */}
-          <Paper sx={{ p: 3, borderRadius: 2, border: '1px solid #E5E7EB', boxShadow: 'none' }}>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#111827', mb: 2 }}>
-              🔒 Security
-            </Typography>
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, borderRadius: 2, bgcolor: '#F9FAFB', mb: 2 }}>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>Password</Typography>
-                <Typography variant="caption" sx={{ color: '#6B7280' }}>Last changed: Never</Typography>
-              </Box>
-              <Button 
-                variant="outlined"
-                sx={{ textTransform: 'none', borderColor: '#E5E7EB', color: '#374151' }}
-              >
-                Change Password
-              </Button>
-            </Box>
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, borderRadius: 2, bgcolor: '#F9FAFB' }}>
-              <Box>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>Two-Factor Authentication</Typography>
-                <Typography variant="caption" sx={{ color: '#6B7280' }}>Add extra security to your account</Typography>
-              </Box>
-              <Button 
-                variant="outlined"
-                sx={{ textTransform: 'none', borderColor: '#E5E7EB', color: '#374151' }}
-              >
-                Enable 2FA
-              </Button>
-            </Box>
           </Paper>
         </Grid>
       </Grid>

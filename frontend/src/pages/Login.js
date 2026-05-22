@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Paper, TextField, Button, Typography, Alert, InputAdornment, Divider, IconButton } from '@mui/material';
+import { Box, Paper, TextField, Button, Typography, Alert, InputAdornment, IconButton } from '@mui/material';
 import { Email, Lock, Person, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +33,6 @@ const Login = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', bgcolor: '#F9FAFB' }}>
-      {/* Left Side - Blue Gradient Panel */}
       <Box
         sx={{
           flex: 1,
@@ -48,32 +47,30 @@ const Login = () => {
           overflow: 'hidden'
         }}
       >
-        {/* Decorative circles */}
-        <Box sx={{ 
-          position: 'absolute', 
-          top: -100, 
-          right: -100, 
-          width: 300, 
-          height: 300, 
-          borderRadius: '50%', 
-          bgcolor: 'rgba(255,255,255,0.05)' 
+        <Box sx={{
+          position: 'absolute',
+          top: -100,
+          right: -100,
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          bgcolor: 'rgba(255,255,255,0.05)'
         }} />
-        <Box sx={{ 
-          position: 'absolute', 
-          bottom: -50, 
-          left: -50, 
-          width: 200, 
-          height: 200, 
-          borderRadius: '50%', 
-          bgcolor: 'rgba(255,255,255,0.05)' 
+        <Box sx={{
+          position: 'absolute',
+          bottom: -50,
+          left: -50,
+          width: 200,
+          height: 200,
+          borderRadius: '50%',
+          bgcolor: 'rgba(255,255,255,0.05)'
         }} />
 
         <Box sx={{ textAlign: 'center', maxWidth: 500, zIndex: 1 }}>
-          {/* Logo */}
           <Box sx={{ mb: 4 }}>
-            <img 
-              src="/logo.png" 
-              alt="STARBOY" 
+            <img
+              src="/logo.png"
+              alt="STARBOY"
               style={{ width: 200, height: 'auto' }}
               onError={(e) => { e.target.style.display = 'none'; }}
             />
@@ -86,10 +83,9 @@ const Login = () => {
             A unified platform for support, follow-ups, and team efficiency.
           </Typography>
 
-          {/* Testimonial Card */}
-          <Paper sx={{ 
-            p: 3, 
-            bgcolor: 'rgba(255,255,255,0.1)', 
+          <Paper sx={{
+            p: 3,
+            bgcolor: 'rgba(255,255,255,0.1)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255,255,255,0.2)',
             borderRadius: 3,
@@ -99,10 +95,10 @@ const Login = () => {
               "Starboy has completely transformed how we handle customer support. The interface is clean, fast, and intuitive."
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Box sx={{ 
-                width: 40, 
-                height: 40, 
-                borderRadius: '50%', 
+              <Box sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
                 bgcolor: '#FED7AA',
                 display: 'flex',
                 alignItems: 'center',
@@ -125,17 +121,15 @@ const Login = () => {
         </Box>
       </Box>
 
-      {/* Right Side - Form */}
-      <Box sx={{ 
-        flex: 1, 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
+      <Box sx={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         p: 4,
         bgcolor: '#FFFFFF'
       }}>
         <Box sx={{ width: '100%', maxWidth: 420 }}>
-          {/* Mobile Logo */}
           <Box sx={{ display: { xs: 'block', md: 'none' }, textAlign: 'center', mb: 3 }}>
             <img src="/logo.png" alt="STARBOY" style={{ width: 120 }} onError={(e) => e.target.style.display = 'none'} />
           </Box>
@@ -146,11 +140,6 @@ const Login = () => {
           <Typography variant="body2" sx={{ color: '#6B7280', mb: 4 }}>
             {isRegister ? 'Join Starboy Helpdesk today' : 'Log in to your Starboy account'}
           </Typography>
-
-          <Alert severity="info" sx={{ mb: 3, borderRadius: 2, fontSize: '0.85rem' }}>
-            👤 Customer: email@gmail.com<br />
-            🛠️ Staff: email@starboy.com
-          </Alert>
 
           {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>}
 
@@ -222,29 +211,6 @@ const Login = () => {
               }}
             >
               {loading ? 'Please wait...' : (isRegister ? 'Create Account' : 'Sign In')}
-            </Button>
-
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
-                OR CONTINUE WITH
-              </Typography>
-            </Divider>
-
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{
-                py: 1.5,
-                fontWeight: 500,
-                textTransform: 'none',
-                color: '#374151',
-                borderColor: '#E5E7EB',
-                borderRadius: 2,
-                '&:hover': { bgcolor: '#F9FAFB', borderColor: '#D1D5DB' }
-              }}
-            >
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: 20, marginRight: 12 }} />
-              Sign up with Google
             </Button>
 
             <Typography variant="body2" sx={{ textAlign: 'center', mt: 3, color: '#6B7280' }}>

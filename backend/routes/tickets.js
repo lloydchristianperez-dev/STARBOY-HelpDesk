@@ -4,8 +4,96 @@ const path = require('path');
 const Ticket = require('../models/Ticket');
 const { auth, adminAuth } = require('../middleware/auth');
 
-const router = express.Router();
 
+const router = express.Router();
+/**
+ * @swagger
+ * /api/tickets:
+ *   post:
+ *     summary: Create a ticket
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       201:
+ *         description: Ticket created successfully
+ *   get:
+ *     summary: Get all tickets (admin)
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: List of tickets
+ * /api/tickets/my-tickets:
+ *   get:
+ *     summary: Get current user's tickets
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: List of user tickets
+ * /api/tickets/download/{filename}:
+ *   get:
+ *     summary: Download ticket attachment
+ *     tags:
+ *       - Tickets
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: File download response
+ * /api/tickets/{id}:
+ *   get:
+ *     summary: Get single ticket
+ *     tags:
+ *       - Tickets
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket details
+ *   put:
+ *     summary: Update ticket (admin)
+ *     tags:
+ *       - Tickets
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket updated
+ *   delete:
+ *     summary: Delete ticket (admin)
+ *     tags:
+ *       - Tickets
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Ticket deleted
+ * /api/tickets/stats/overview:
+ *   get:
+ *     summary: Get ticket stats overview (admin)
+ *     tags:
+ *       - Tickets
+ *     responses:
+ *       200:
+ *         description: Ticket statistics
+ */
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

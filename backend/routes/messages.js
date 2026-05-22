@@ -3,6 +3,7 @@ const Message = require('../models/Message');
 const User = require('../models/User');
 const { auth, adminAuth } = require('../middleware/auth');
 
+
 const router = express.Router();
 
 // Send message (admin to user - follow-up)
@@ -32,6 +33,47 @@ router.get('/inbox', auth, async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+/**
+ * @swagger
+ * /api/messages:
+ *   post:
+ *     summary: Send a message
+ *     tags:
+ *       - Messages
+ *     responses:
+ *       201:
+ *         description: Message sent successfully
+ * /api/messages/inbox:
+ *   get:
+ *     summary: Get received messages
+ *     tags:
+ *       - Messages
+ *     responses:
+ *       200:
+ *         description: List of inbox messages
+ * /api/messages/sent:
+ *   get:
+ *     summary: Get sent messages
+ *     tags:
+ *       - Messages
+ *     responses:
+ *       200:
+ *         description: List of sent messages
+ * /api/messages/{id}/read:
+ *   put:
+ *     summary: Mark message as read
+ *     tags:
+ *       - Messages
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Message marked as read
+ */
 
 // Get sent messages
 router.get('/sent', auth, async (req, res) => {
